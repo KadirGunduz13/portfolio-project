@@ -1,0 +1,17 @@
+# Bağımlılıklar ve derleme çıktıları
+node_modules/
+dist/
+target/
+*.class
+
+# Ortam değişkenleri ve gizli anahtarlar
+.env
+
+# IDE ayarları
+.idea/
+.vscode/
+*.iml
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db

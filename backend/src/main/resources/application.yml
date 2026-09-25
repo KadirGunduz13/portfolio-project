@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    # Portu Docker Compose'da 5433 yaptığımız için buraya da 5433 yazıyoruz
+    url: jdbc:postgresql://localhost:5433/portfolio_db
+    username: postgres
+    password: rootpassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# Güvenlik ve JWT Ayarları
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration: 86400000 # 24 saat (ms cinsinden)
+
+# Cloudinary Ayarları (Şimdilik geçici bırakıyoruz)
+cloudinary:
+  cloud-name: dummy_name
+  api-key: dummy_key
+  api-secret: dummy_secret
