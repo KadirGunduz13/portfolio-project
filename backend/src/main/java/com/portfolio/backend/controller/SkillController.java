@@ -39,4 +39,10 @@ public class SkillController {
         service.deleteSkill(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/reorder")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> orderedIds) {
+        service.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

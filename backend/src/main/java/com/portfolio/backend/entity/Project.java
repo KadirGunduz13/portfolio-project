@@ -32,4 +32,7 @@ public class Project {
 
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }

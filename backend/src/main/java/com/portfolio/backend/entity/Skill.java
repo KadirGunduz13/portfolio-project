@@ -23,4 +23,7 @@ public class Skill {
 
     @Column(nullable = false)
     private String level;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }

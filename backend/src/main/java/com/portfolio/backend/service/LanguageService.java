@@ -15,7 +15,7 @@ public class LanguageService {
     private final LanguageRepository repository;
 
     public List<Language> getAllLanguages() {
-        return repository.findAll();
+        return repository.findAllByOrderBySortOrderAsc();
     }
 
     public Language addLanguage(LanguageRequest request) {
@@ -36,5 +36,16 @@ public class LanguageService {
 
     public void deleteLanguage(Long id) {
         repository.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void updateOrder(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Language lang = repository.findById(ids.get(i)).orElse(null);
+            if (lang != null) {
+                lang.setSortOrder(i);
+                repository.save(lang);
+            }
+        }
     }
 }

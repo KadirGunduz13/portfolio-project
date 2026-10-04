@@ -39,4 +39,10 @@ public class LanguageController {
         service.deleteLanguage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/update-order")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> orderedIds) {
+        service.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

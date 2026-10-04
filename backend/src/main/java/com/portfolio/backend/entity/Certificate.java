@@ -30,4 +30,7 @@ public class Certificate {
 
     @Column(columnDefinition = "TEXT")
     private String imageUrl; // Cloudinary'ye yüklenecek sertifika görseli
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }

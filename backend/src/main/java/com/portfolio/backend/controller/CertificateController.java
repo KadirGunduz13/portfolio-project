@@ -35,4 +35,10 @@ public class CertificateController {
         certificateService.deleteCertificate(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/update-order")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> orderedIds) {
+        certificateService.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -40,4 +40,10 @@ public class ProjectController {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/reorder")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> orderedIds) {
+        projectService.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

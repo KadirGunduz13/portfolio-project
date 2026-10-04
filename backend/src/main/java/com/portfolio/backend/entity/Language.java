@@ -23,4 +23,7 @@ public class Language {
 
     @Column(nullable = false)
     private String level; // Örn: Anadil, B2, C1
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }

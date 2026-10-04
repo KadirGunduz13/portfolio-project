@@ -15,7 +15,7 @@ public class SkillService {
     private final SkillRepository repository;
 
     public List<Skill> getAllSkills() {
-        return repository.findAll();
+        return repository.findAllByOrderBySortOrderAsc();
     }
 
     public Skill addSkill(SkillRequest request) {
@@ -36,5 +36,16 @@ public class SkillService {
 
     public void deleteSkill(Long id) {
         repository.deleteById(id);
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void updateOrder(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Skill skill = repository.findById(ids.get(i)).orElse(null);
+            if (skill != null) {
+                skill.setSortOrder(i);
+                repository.save(skill);
+            }
+        }
     }
 }

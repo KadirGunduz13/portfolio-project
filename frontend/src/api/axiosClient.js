@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    // VITE ortam değişkenlerinden API adresini çeker. Eğer bulamazsa (geliştirme ortamında) localhost'u kullanır.
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
 });
 
 // Her istekten önce çalışır: LocalStorage'da token varsa isteğe ekler

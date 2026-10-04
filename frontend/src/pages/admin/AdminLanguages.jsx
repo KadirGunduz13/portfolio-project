@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 export default function AdminLanguages() {
     const [languages, setLanguages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
-    const [formData, setFormData] = useState({ name: '', level: '' });
+    const [formData, setFormData] = useState({ name: '', level: 'B2 (Orta-İleri)' });
 
     const fetchLanguages = async () => {
         try {
             const response = await axiosClient.get('/languages');
-            setLanguages(response.data);
+            setLanguages(response.data || []);
         } catch (error) {
             console.error("Diller çekilirken hata:", error);
         } finally {
@@ -32,7 +33,7 @@ export default function AdminLanguages() {
                 await axiosClient.post('/languages', formData);
             }
             setIsModalOpen(false);
-            setFormData({ name: '', level: '' });
+            setFormData({ name: '', level: 'B2 (Orta-İleri)' });
             setEditingId(null);
             fetchLanguages();
         } catch (error) {
@@ -58,9 +59,29 @@ export default function AdminLanguages() {
     };
 
     const openAddModal = () => {
-        setFormData({ name: '', level: '' });
+        setFormData({ name: '', level: 'B2 (Orta-İleri)' });
         setEditingId(null);
         setIsModalOpen(true);
+    };
+
+    // --- SÜRÜKLE-BIRAK (DRAG AND DROP) SIRALAMA İŞLEMİ ---
+    const handleDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(languages);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        setLanguages(items);
+
+        try {
+            const ids = items.map(item => item.id);
+            await axiosClient.put('/languages/update-order', ids);
+        } catch (error) {
+            console.error("Sıralama kaydedilemedi:", error);
+            alert("Sıralama güncellenirken sunucu hatası oluştu.");
+            fetchLanguages();
+        }
     };
 
     if (loading) return <div className="p-8 text-on-surface">Yükleniyor...</div>;
@@ -69,8 +90,8 @@ export default function AdminLanguages() {
         <div className="p-6 md:p-10 max-w-6xl mx-auto text-on-surface">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="font-headline-md text-3xl font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-tertiary">translate</span>
-                    Dil Yönetimi
+                    <span className="material-symbols-outlined text-primary">translate</span>
+                    Dil Yetkinlikleri
                 </h1>
                 <button
                     onClick={openAddModal}
@@ -85,35 +106,61 @@ export default function AdminLanguages() {
                 {languages.length === 0 ? (
                     <div className="p-8 text-center text-outline-variant">Henüz bir dil eklenmemiş.</div>
                 ) : (
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                        <tr className="bg-surface-container border-b border-outline-variant/20 text-on-surface-variant font-label-lg">
-                            <th className="p-4">Dil Adı</th>
-                            <th className="p-4">Seviye</th>
-                            <th className="p-4 text-right">İşlemler</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {languages.map((lang) => (
-                            <tr key={lang.id} className="border-b border-outline-variant/10 hover:bg-surface-container-high/30 transition-colors">
-                                <td className="p-4 font-semibold">{lang.name}</td>
-                                <td className="p-4">
-                                        <span className="px-3 py-1 bg-tertiary/10 text-tertiary rounded-full text-sm font-semibold border border-tertiary/20">
-                                            {lang.level}
-                                        </span>
-                                </td>
-                                <td className="p-4 flex justify-end gap-2">
-                                    <button onClick={() => openEditModal(lang)} className="p-2 bg-secondary/10 text-secondary rounded hover:bg-secondary/20 transition-colors">
-                                        <span className="material-symbols-outlined text-sm">edit</span>
-                                    </button>
-                                    <button onClick={() => handleDelete(lang.id)} className="p-2 bg-error/10 text-error rounded hover:bg-error/20 transition-colors">
-                                        <span className="material-symbols-outlined text-sm">delete</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        <Droppable droppableId="languages-list">
+                            {(provided) => (
+                                <table
+                                    className="w-full text-left border-collapse"
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                >
+                                    <thead>
+                                    <tr className="bg-surface-container border-b border-outline-variant/20 text-on-surface-variant font-label-lg">
+                                        <th className="p-4 w-16 text-center">Sıra</th>
+                                        <th className="p-4">Dil</th>
+                                        <th className="p-4">Seviye</th>
+                                        <th className="p-4 text-right">İşlemler</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {languages.map((lang, index) => (
+                                        <Draggable key={lang.id.toString()} draggableId={lang.id.toString()} index={index}>
+                                            {(provided, snapshot) => (
+                                                <tr
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    className={`border-b border-outline-variant/10 transition-colors ${
+                                                        snapshot.isDragging
+                                                            ? 'bg-surface-container-high shadow-lg opacity-90'
+                                                            : 'hover:bg-surface-container-high/30'
+                                                    }`}
+                                                >
+                                                    {/* Üst üste 3 çizgi (Drag Handle) */}
+                                                    <td className="p-4 text-center" {...provided.dragHandleProps}>
+                                                            <span className="material-symbols-outlined text-outline cursor-grab active:cursor-grabbing hover:text-primary transition-colors select-none">
+                                                                drag_indicator
+                                                            </span>
+                                                    </td>
+                                                    <td className="p-4 font-semibold">{lang.name}</td>
+                                                    <td className="p-4 font-semibold text-primary">{lang.level}</td>
+                                                    <td className="p-4 flex justify-end gap-2">
+                                                        <button onClick={() => openEditModal(lang)} className="p-2 bg-secondary/10 text-secondary rounded hover:bg-secondary/20 transition-colors">
+                                                            <span className="material-symbols-outlined text-sm">edit</span>
+                                                        </button>
+                                                        <button onClick={() => handleDelete(lang.id)} className="p-2 bg-error/10 text-error rounded hover:bg-error/20 transition-colors">
+                                                            <span className="material-symbols-outlined text-sm">delete</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                    </tbody>
+                                </table>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                 )}
             </div>
 
@@ -124,7 +171,7 @@ export default function AdminLanguages() {
                         <h2 className="text-2xl font-bold mb-6">{editingId ? 'Dili Düzenle' : 'Yeni Dil Ekle'}</h2>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-on-surface-variant mb-1">Dil Adı (Örn: İngilizce, Almanca)</label>
+                                <label className="block text-sm font-medium text-on-surface-variant mb-1">Dil (Örn: İngilizce, Almanca)</label>
                                 <input
                                     type="text"
                                     required
@@ -134,14 +181,21 @@ export default function AdminLanguages() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-on-surface-variant mb-1">Seviye (Örn: B2, İleri Seviye, Anadil)</label>
-                                <input
-                                    type="text"
+                                <label className="block text-sm font-medium text-on-surface-variant mb-1">Seviye</label>
+                                <select
                                     required
                                     value={formData.level}
                                     onChange={(e) => setFormData({...formData, level: e.target.value})}
                                     className="w-full bg-surface px-4 py-2 rounded-lg border border-outline-variant/30 focus:border-primary outline-none"
-                                />
+                                >
+                                    <option value="A1 (Başlangıç)">A1 (Başlangıç)</option>
+                                    <option value="A2 (Temel)">A2 (Temel)</option>
+                                    <option value="B1 (Orta)">B1 (Orta)</option>
+                                    <option value="B2 (Orta-İleri)">B2 (Orta-İleri)</option>
+                                    <option value="C1 (İleri)">C1 (İleri)</option>
+                                    <option value="C2 (Anadil Seviyesi)">C2 (Anadil Seviyesi)</option>
+                                    <option value="Anadil">Anadil</option>
+                                </select>
                             </div>
                             <div className="flex justify-end gap-3 mt-4">
                                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2 rounded-lg bg-surface-container-high hover:bg-surface-container-highest transition-colors">

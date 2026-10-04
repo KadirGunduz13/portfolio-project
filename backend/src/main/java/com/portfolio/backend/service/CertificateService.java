@@ -4,6 +4,7 @@ import com.portfolio.backend.entity.Certificate;
 import com.portfolio.backend.repository.CertificateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class CertificateService {
     private final CertificateRepository certificateRepository;
 
     public List<Certificate> getAllCertificates() {
-        return certificateRepository.findAll();
+        return certificateRepository.findAllByOrderBySortOrderAsc();
     }
 
     public Certificate createCertificate(Certificate certificate) {
@@ -34,5 +35,16 @@ public class CertificateService {
 
     public void deleteCertificate(Long id) {
         certificateRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateOrder(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Certificate cert = certificateRepository.findById(ids.get(i)).orElse(null);
+            if (cert != null) {
+                cert.setSortOrder(i);
+                certificateRepository.save(cert);
+            }
+        }
     }
 }

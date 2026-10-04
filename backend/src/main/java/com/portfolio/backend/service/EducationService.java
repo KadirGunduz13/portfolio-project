@@ -4,6 +4,7 @@ import com.portfolio.backend.entity.Education;
 import com.portfolio.backend.repository.EducationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class EducationService {
     private final EducationRepository educationRepository;
 
     public List<Education> getAllEducations() {
-        return educationRepository.findAll();
+        return educationRepository.findAllByOrderBySortOrderAsc();
     }
 
     public Education createEducation(Education education) {
@@ -35,5 +36,16 @@ public class EducationService {
 
     public void deleteEducation(Long id) {
         educationRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateOrder(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Education edu = educationRepository.findById(ids.get(i)).orElse(null);
+            if (edu != null) {
+                edu.setSortOrder(i);
+                educationRepository.save(edu);
+            }
+        }
     }
 }

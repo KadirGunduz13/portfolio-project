@@ -1,12 +1,11 @@
 server:
   port: 8080
-
 spring:
   datasource:
     # Portu Docker Compose'da 5433 yaptığımız için buraya da 5433 yazıyoruz
     url: jdbc:postgresql://localhost:5433/portfolio_db
     username: postgres
-    password: rootpassword
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -22,24 +21,27 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: kdrgndz203@gmail.com
-    password: vbndjmbsxqbwjfon
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
-
 # Güvenlik ve JWT Ayarları
 jwt:
-  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  secret: ${JWT_SECRET}
   expiration: 86400000 # 24 saat (ms cinsinden)
-
 # Cloudinary Ayarları
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+
+app:
+  cors:
+    # Canlıya çıkarken sunucu panelinden ALLOWED_ORIGINS değerine kendi domainini vereceksin
+    # Örn: https://kadirgunduz.com,https://www.kadirgunduz.com
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
 

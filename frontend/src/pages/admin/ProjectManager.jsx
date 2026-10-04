@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axiosClient from '../../api/axiosClient';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 export default function ProjectManager() {
     const { register, handleSubmit, reset, setValue, watch } = useForm({
@@ -67,11 +68,9 @@ export default function ProjectManager() {
             setStatusMsg({ type: 'info', text: 'İşleniyor...' });
 
             if (editingId) {
-                // Düzenleme Modu (PUT isteği)
                 await axiosClient.put(`/projects/${editingId}`, data);
                 setStatusMsg({ type: 'success', text: 'Proje başarıyla güncellendi!' });
             } else {
-                // Yeni Ekleme Modu (POST isteği)
                 await axiosClient.post('/projects', data);
                 setStatusMsg({ type: 'success', text: 'Proje başarıyla eklendi!' });
             }
@@ -114,6 +113,26 @@ export default function ProjectManager() {
     const cancelEdit = () => {
         setEditingId(null);
         reset();
+    };
+
+    // --- SÜRÜKLE-BIRAK (DRAG AND DROP) SIRALAMA İŞLEMİ ---
+    const handleDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(projects);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        setProjects(items); // Arayüzü anında güncelle
+
+        try {
+            const ids = items.map(item => item.id);
+            await axiosClient.put('/projects/reorder', ids); // Backend'e yeni sıralamayı gönder
+        } catch (error) {
+            console.error("Sıralama kaydedilemedi:", error);
+            setStatusMsg({ type: 'error', text: 'Sıralama güncellenirken hata oluştu.' });
+            fetchProjects(); // Hata olursa eski haline döndür
+        }
     };
 
     return (
@@ -266,30 +285,64 @@ export default function ProjectManager() {
                             </div>
                         </div>
 
+                        {/* KAYITLI PROJELER LİSTESİ VE SÜRÜKLE-BIRAK (DRAG AND DROP) ALANI */}
                         <div className="mt-4 p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20">
                             <div className="flex items-center justify-between mb-3">
-                                <span className="font-label-md text-on-surface">Kayıtlı Projeler</span>
+                                <span className="font-label-md text-on-surface">Kayıtlı Projeler (Sürükle & Sırala)</span>
                                 <span className="font-label-tech text-tertiary">{projects.length} Adet</span>
                             </div>
-                            <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-1">
-                                {projects.length === 0 ? (
-                                    <span className="text-sm text-outline">Henüz proje eklenmedi.</span>
-                                ) : (
-                                    projects.map(proj => (
-                                        <div key={proj.id} className={`flex items-center justify-between p-2 rounded border transition-colors ${editingId === proj.id ? 'bg-secondary-container/10 border-secondary/30' : 'bg-surface-container border-outline-variant/10'}`}>
-                                            <span className="font-label-sm text-on-surface truncate pr-2">{proj.title}</span>
-                                            <div className="flex gap-2 flex-shrink-0">
-                                                <button onClick={() => handleEdit(proj)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-secondary transition-colors cursor-pointer" title="Düzenle">
-                                                    edit
-                                                </button>
-                                                <button onClick={() => handleDelete(proj.id)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-error transition-colors cursor-pointer" title="Sil">
-                                                    delete
-                                                </button>
+
+                            {projects.length === 0 ? (
+                                <span className="text-sm text-outline">Henüz proje eklenmedi.</span>
+                            ) : (
+                                <DragDropContext onDragEnd={handleDragEnd}>
+                                    <Droppable droppableId="projects-manager-list">
+                                        {(provided) => (
+                                            <div
+                                                className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-1"
+                                                {...provided.droppableProps}
+                                                ref={provided.innerRef}
+                                            >
+                                                {projects.map((proj, index) => (
+                                                    <Draggable key={proj.id.toString()} draggableId={proj.id.toString()} index={index}>
+                                                        {(provided, snapshot) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                                                                    snapshot.isDragging
+                                                                        ? 'bg-surface-container-high shadow-lg border-secondary/50 opacity-90'
+                                                                        : editingId === proj.id
+                                                                            ? 'bg-secondary-container/10 border-secondary/30'
+                                                                            : 'bg-surface-container border-outline-variant/10 hover:border-outline-variant/30'
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-center gap-2 overflow-hidden">
+                                                                    {/* 3 Çizgili Tutamaç (Drag Handle) */}
+                                                                    <div {...provided.dragHandleProps} className="text-outline hover:text-secondary cursor-grab active:cursor-grabbing flex items-center">
+                                                                        <span className="material-symbols-outlined text-lg select-none">drag_indicator</span>
+                                                                    </div>
+                                                                    <span className="font-label-sm text-on-surface truncate">{proj.title}</span>
+                                                                </div>
+
+                                                                <div className="flex gap-2 flex-shrink-0">
+                                                                    <button onClick={() => handleEdit(proj)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-secondary transition-colors cursor-pointer" title="Düzenle">
+                                                                        edit
+                                                                    </button>
+                                                                    <button onClick={() => handleDelete(proj.id)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-error transition-colors cursor-pointer" title="Sil">
+                                                                        delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                ))}
+                                                {provided.placeholder}
                                             </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
+                                        )}
+                                    </Droppable>
+                                </DragDropContext>
+                            )}
                         </div>
 
                     </div>

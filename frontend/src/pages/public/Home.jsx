@@ -284,8 +284,7 @@ export default function Home() {
                     </div>
                     <div className="flex-1 flex justify-center lg:justify-end relative">
                         {/* Terminal Kutusunun Konumu (Daha önce yaptığımız ekleme) */}
-                        <div className="absolute -top-24 lg:-top-28 right-8 lg:right-35 z-20 flex flex-col bg-[#0F172A]/90 backdrop-blur-xl border border-outline-variant/20 rounded-xl shadow-[0_10px_40px_rgba(var(--color-primary),0.2)] overflow-hidden transform hover:scale-105 hover:-translate-y-1 transition-all duration-500 group">
-
+                        <div className="absolute -top-32 lg:-top-40 left-1/2 -translate-x-1/2 ml-10 lg:ml-16 z-20 flex flex-col bg-[#0F172A]/90 backdrop-blur-xl border border-outline-variant/20 rounded-xl shadow-[0_10px_40px_rgba(var(--color-primary),0.2)] overflow-hidden transform hover:scale-105 hover:-translate-y-1 transition-all duration-500 group w-max">
                             {/* Terminal Üst Bar */}
                             <div className="flex items-center gap-1.5 px-4 py-2 bg-black/50 border-b border-outline-variant/10">
                                 <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-sm"></div>

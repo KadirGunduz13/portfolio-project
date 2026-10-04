@@ -28,4 +28,7 @@ public class Experience {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }

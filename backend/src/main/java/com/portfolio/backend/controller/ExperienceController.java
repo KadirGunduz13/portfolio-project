@@ -35,4 +35,10 @@ public class ExperienceController {
         experienceService.deleteExperience(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/update-order")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> orderedIds) {
+        experienceService.updateOrder(orderedIds);
+        return ResponseEntity.ok().build();
+    }
 }

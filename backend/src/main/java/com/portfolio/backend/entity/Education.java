@@ -26,4 +26,7 @@ public class Education {
     private String startDate;
     private String endDate;
     private String gpa;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder = 0;
 }
