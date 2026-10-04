@@ -23,6 +23,11 @@ public class Certificate {
     private String issuer; // Veren Kurum
 
     private String issueDate;
+
+    // Karakter sınırını kaldırdığımız alanlar:
+    @Column(columnDefinition = "TEXT")
     private String credentialUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String imageUrl; // Cloudinary'ye yüklenecek sertifika görseli
 }

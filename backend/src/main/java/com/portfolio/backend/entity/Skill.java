@@ -1,12 +1,14 @@
 package com.portfolio.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "skills")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,8 +19,8 @@ public class Skill {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // Örn: Java, React, Docker
+    private String name; // Örn: Java, React, SQL
 
-    private String category; // Örn: "Backend", "Frontend", "DevOps", "Database"
-    private Integer proficiency; // Seviye yüzdesi: Örn: 85
+    @Column(nullable = false)
+    private String level;
 }

@@ -22,8 +22,14 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String technologies; // Virgülle ayrılmış etiketler: React, Spring Boot, Docker
+    private String technologies;
+
+    @Column(columnDefinition = "TEXT")
     private String githubUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String liveUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 }

@@ -1,12 +1,14 @@
 package com.portfolio.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "languages")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,8 +19,8 @@ public class Language {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // Örn: İngilizce
+    private String name; // Örn: Türkçe, İngilizce
 
     @Column(nullable = false)
-    private String level; // Örn: B2, C1, İleri Düzey, Ana Dil
+    private String level; // Örn: Anadil, B2, C1
 }
