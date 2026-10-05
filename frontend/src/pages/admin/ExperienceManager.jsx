@@ -7,7 +7,7 @@ export default function ExperienceManager() {
     const { register, handleSubmit, reset, setValue } = useForm({
         defaultValues: {
             company: '',
-            position: '',
+            role: '',
             startDate: '',
             endDate: '',
             description: '',
@@ -161,7 +161,7 @@ export default function ExperienceManager() {
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-md text-label-md text-on-surface">Pozisyon / Unvan</label>
-                                    <input {...register('position', { required: true })} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all" placeholder="Örn: Software Engineering Intern" />
+                                    <input {...register('role', { required: true })} className="w-full px-4..." placeholder="Örn: Software Engineering Intern" />
                                 </div>
                             </div>
 
@@ -234,7 +234,7 @@ export default function ExperienceManager() {
                                                                         <span className="material-symbols-outlined text-lg select-none">drag_indicator</span>
                                                                     </div>
                                                                     <div className="flex flex-col truncate">
-                                                                        <span className="font-label-sm text-on-surface font-semibold truncate">{exp.position}</span>
+                                                                        <span className="font-label-sm text-on-surface font-semibold truncate">{exp.role}</span>
                                                                         <span className="text-xs text-outline truncate">{exp.company}</span>
                                                                     </div>
                                                                 </div>
