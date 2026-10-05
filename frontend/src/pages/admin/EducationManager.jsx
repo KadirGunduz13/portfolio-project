@@ -6,11 +6,11 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 export default function EducationManager() {
     const { register, handleSubmit, reset, setValue } = useForm({
         defaultValues: {
-            school: '',
+            institution: '',
             degree: '',
             startDate: '',
             endDate: '',
-            description: ''
+            fieldOfStudy: ''
         }
     });
 
@@ -156,8 +156,7 @@ export default function EducationManager() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-md text-label-md text-on-surface">Okul / Kurum</label>
-                                    <input {...register('school', { required: true })} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all" placeholder="Örn: Kırklareli Üniversitesi" />
-                                </div>
+                                    <input {...register('institution', { required: true })} className="w-full px-4 py-2.5..." placeholder="Örn: Kırklareli Üniversitesi" />                                </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-md text-label-md text-on-surface">Bölüm / Derece</label>
                                     <input {...register('degree', { required: true })} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all" placeholder="Örn: Yazılım Mühendisliği" />
@@ -177,8 +176,7 @@ export default function EducationManager() {
 
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-label-md text-label-md text-on-surface">Açıklama</label>
-                                <textarea {...register('description')} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all resize-y" rows="3" placeholder="Eğitim sürecindeki başarılarınızı açıklayın..."></textarea>
-                            </div>
+                                <textarea {...register('fieldOfStudy')} className="w-full px-4 py-2.5..." rows="3" placeholder="Eğitim sürecindeki başarılarınızı açıklayın..."></textarea>                            </div>
                         </div>
 
                         <div className="flex justify-end gap-3 px-space-lg py-space-md bg-surface-container-high/30 border-t border-outline-variant/20">
@@ -233,8 +231,7 @@ export default function EducationManager() {
                                                                         <span className="material-symbols-outlined text-lg select-none">drag_indicator</span>
                                                                     </div>
                                                                     <div className="flex flex-col truncate">
-                                                                        <span className="font-label-sm text-on-surface font-semibold truncate">{edu.school}</span>
-                                                                        <span className="text-xs text-outline truncate">{edu.degree}</span>
+                                                                        <span className="font-label-sm text-on-surface font-semibold truncate">{edu.institution}</span>                                                                        <span className="text-xs text-outline truncate">{edu.degree}</span>
                                                                     </div>
                                                                 </div>
 
