@@ -183,7 +183,7 @@ export default function CertificationManager() {
                         <div className="p-space-lg flex flex-col gap-space-md">
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-label-md text-label-md text-on-surface">Sertifika Adı</label>
-                                <input {...register('title', { required: true })} className="w-full px-4 py-2.5..." placeholder="Örn: Yapay Zekaya Giriş" />                            </div>
+                                <input {...register('title', { required: true })} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all" placeholder="Örn: Yapay Zekaya Giriş" />                            </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
                                 <div className="flex flex-col gap-1.5">
@@ -192,7 +192,7 @@ export default function CertificationManager() {
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="font-label-md text-label-md text-on-surface">Alınma Tarihi</label>
-                                    <input {...register('issueDate', { required: true })} className="w-full px-4 py-2.5..." placeholder="Örn: Temmuz 2025" />                                </div>
+                                    <input {...register('issueDate', { required: true })} className="w-full px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md border border-outline-variant/10 focus:ring-2 focus:ring-secondary/40 focus:outline-none transition-all" placeholder="Örn: Temmuz 2025" />                                </div>
                             </div>
 
                             <div className="flex flex-col gap-1.5 p-4 bg-surface-container/50 rounded-xl border border-outline-variant/20 mt-2">
