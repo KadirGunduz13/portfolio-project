@@ -7,6 +7,7 @@ export default function Home() {
     const [experiences, setExperiences] = useState([]);
     const [educations, setEducations] = useState([]);
     const [certificates, setCertificates] = useState([]);
+    const [volunteerActivities, setVolunteerActivities] = useState([]);
 
     // YENİ STATE'LER (Yetenekler ve Diller için)
     const [skills, setSkills] = useState([]);
@@ -79,7 +80,8 @@ export default function Home() {
                     axiosClient.get('/educations'),
                     axiosClient.get('/certificates'),
                     axiosClient.get('/skills'),
-                    axiosClient.get('/languages')
+                    axiosClient.get('/languages'),
+                    axiosClient.get('/volunteer-activities')
                 ]);
 
                 if (aboutRes.data) setAbout(aboutRes.data);
@@ -89,6 +91,7 @@ export default function Home() {
                 if (certRes.data) setCertificates(certRes.data);
                 if (skillsRes.data) setSkills(skillsRes.data);
                 if (langRes.data) setLanguages(langRes.data);
+                if (volunteerRes.data) setVolunteerActivities(volunteerRes.data);
 
             } catch (error) {
                 console.error("Veriler çekilirken hata oluştu:", error);
@@ -223,6 +226,7 @@ export default function Home() {
                         <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className={getNavLinkClass('about')}>Hakkımda</a>
                         <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className={getNavLinkClass('projects')}>Projeler</a>
                         <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className={getNavLinkClass('experience')}>Deneyim</a>
+                        <a href="#volunteer" onClick={(e) => scrollToSection(e, 'volunteer')} className={getNavLinkClass('volunteer')}>Gönüllülük</a>
                         <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={getNavLinkClass('skills')}>Yetenekler</a>
                         <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className={getNavLinkClass('education')}>Eğitim</a>
                         <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className={getNavLinkClass('certifications')}>Sertifikalar</a>
@@ -247,6 +251,7 @@ export default function Home() {
                         <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className={`p-3 text-center ${getNavLinkClass('about')}`}>Hakkımda</a>
                         <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className={`p-3 text-center ${getNavLinkClass('projects')}`}>Projeler</a>
                         <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className={`p-3 text-center ${getNavLinkClass('experience')}`}>Deneyim</a>
+                        <a href="#volunteer" onClick={(e) => scrollToSection(e, 'volunteer')} className={getNavLinkClass('volunteer')}>Gönüllülük</a>
                         <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={`p-3 text-center ${getNavLinkClass('skills')}`}>Yetenekler</a>
                         <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className={`p-3 text-center ${getNavLinkClass('education')}`}>Eğitim</a>
                         <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className={`p-3 text-center ${getNavLinkClass('certifications')}`}>Sertifikalar</a>
@@ -439,7 +444,45 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 4. YETENEKLER BÖLÜMÜ --- */}
+            {/* --- 4. GÖNÜLLÜLÜK BÖLÜMÜ --- */}
+            <section id="volunteer" className="relative z-10 w-full py-16 sm:py-20 border-t border-outline-variant/5">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex items-center gap-3 mb-8 sm:mb-10">
+                        <span className="material-symbols-outlined text-2xl sm:text-3xl text-secondary">volunteer_activism</span>
+                        <h2 className="font-headline-md text-2xl sm:text-3xl font-bold">Gönüllülük Faaliyetleri</h2>
+                    </div>
+                    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl">
+                        {volunteerActivities.length === 0 ? (
+                            <p className="text-outline-variant">Henüz gönüllülük faaliyeti eklenmedi.</p>
+                        ) : (
+                            volunteerActivities.map((activity) => (
+                                <div key={activity.id} className="relative pl-6 sm:pl-8 md:pl-0">
+                                    <div className="md:hidden absolute left-0 top-0 bottom-0 w-px bg-outline-variant/20"></div>
+                                    <div className="md:hidden absolute left-[-4px] top-6 w-2 h-2 rounded-full bg-secondary"></div>
+                                    <div className="flex flex-col md:flex-row md:items-start gap-2 sm:gap-4 md:gap-12 p-4 sm:p-6 rounded-2xl bg-surface-container/50 border border-outline-variant/10 hover:bg-surface-container transition-colors">
+                                        <div className="md:w-56 flex-shrink-0 pt-1 mb-2 md:mb-0">
+                                <span className="inline-block px-3 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-tech text-[10px] sm:text-xs tracking-wider">
+                                    {activity.startDate} - {activity.endDate || 'Devam Ediyor'}
+                                </span>
+                                        </div>
+                                        <div className="flex flex-col flex-1">
+                                            <h3 className="font-headline-sm text-lg sm:text-xl font-semibold text-on-surface">{activity.role}</h3>
+                                            <span className="font-label-md text-secondary mb-2 sm:mb-3 text-sm sm:text-base">{activity.organization}</span>
+                                            {activity.description && (
+                                                <p className="text-on-surface-variant text-xs sm:text-sm leading-relaxed">
+                                                    {activity.description}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            {/* --- 5. YETENEKLER BÖLÜMÜ --- */}
             <section id="skills" className="relative z-10 w-full py-16 sm:py-24 border-t border-outline-variant/5 bg-surface-container-lowest/30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center gap-3 mb-10 sm:mb-14">
@@ -489,7 +532,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 5. EĞİTİM BÖLÜMÜ --- */}
+            {/* --- 6. EĞİTİM BÖLÜMÜ --- */}
             <section id="education" className="relative z-10 w-full py-16 sm:py-20 border-t border-outline-variant/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center gap-3 mb-8 sm:mb-10">
@@ -536,7 +579,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 6. SERTİFİKALAR BÖLÜMÜ --- */}
+            {/* --- 7. SERTİFİKALAR BÖLÜMÜ --- */}
             <section id="certifications" className="relative z-10 w-full bg-surface-container-lowest/50 py-16 sm:py-20 border-t border-outline-variant/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center gap-3 mb-8 sm:mb-12">
@@ -579,7 +622,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 7. DİLLER BÖLÜMÜ --- */}
+            {/* --- 8. DİLLER BÖLÜMÜ --- */}
             <section id="languages" className="relative z-10 w-full py-16 sm:py-20 border-t border-outline-variant/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center gap-3 mb-8 sm:mb-12">
@@ -606,7 +649,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 8. İLETİŞİM & FOOTER BÖLÜMÜ --- */}
+            {/* --- 9. İLETİŞİM & FOOTER BÖLÜMÜ --- */}
             <section id="contact" className="w-full bg-surface-container-lowest pt-16 sm:pt-20 pb-8 sm:pb-10 border-t border-outline-variant/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16 mb-16 sm:mb-20">

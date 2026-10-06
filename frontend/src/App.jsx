@@ -10,6 +10,7 @@ import ExperienceManager from './pages/admin/ExperienceManager';
 import CertificationManager from './pages/admin/CertificationManager';
 import AdminSkills from "./pages/admin/AdminSkills";
 import AdminLanguages from "./pages/admin/AdminLanguages";
+import VolunteerActivityManager from './pages/admin/VolunteerActivityManager';
 
 function App() {
     return (
@@ -38,6 +39,7 @@ function App() {
                     <Route path="certificates" element={<CertificationManager/>} />
                     <Route path="skills" element={<AdminSkills />} />
                     <Route path="languages" element={<AdminLanguages />} />
+                    <Route path="volunteer-activities" element={<VolunteerActivityManager />} />
                 </Route>
             </Routes>
         </Router>

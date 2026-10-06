@@ -10,15 +10,15 @@ export default function AdminLayout() {
         navigate('/admin/login');
     };
 
-
     const menuItems = [
         { path: '/admin/about', name: 'Hakkımda', icon: 'person' },
         { path: '/admin/projects', name: 'Projeler', icon: 'terminal' },
         { path: '/admin/experiences', name: 'Deneyimler', icon: 'work' },
-        { path: '/admin/skills', name: 'Yetenekler', icon: 'code' }, // YENİ EKLENDİ
+        { path: '/admin/skills', name: 'Yetenekler', icon: 'code' },
         { path: '/admin/educations', name: 'Eğitimler', icon: 'school' },
         { path: '/admin/certificates', name: 'Sertifikalar', icon: 'verified' },
-        { path: '/admin/languages', name: 'Diller', icon: 'translate' }, // YENİ EKLENDİ
+        { path: '/admin/languages', name: 'Diller', icon: 'translate' },
+        { path: '/admin/volunteer-activities', name: 'Gönüllülük', icon: 'volunteer_activism' }, // YENİ EKLENDİ
     ];
 
     return (
