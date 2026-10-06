@@ -19,7 +19,7 @@ public class Skill {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // Örn: Java, React, SQL
+    private String name;
 
     @Column(nullable = false)
     private String level;

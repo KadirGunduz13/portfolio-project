@@ -30,7 +30,6 @@ public class ContactMessage {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
-    // YENİ: IP adresi kontrolü için
     @Column(nullable = false)
     private String ipAddress;
 

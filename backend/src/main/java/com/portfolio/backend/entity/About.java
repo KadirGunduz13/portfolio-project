@@ -17,7 +17,7 @@ public class About {
     private Long id;
 
     private String fullName;
-    private String title; // Örn: Full Stack Developer
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
@@ -25,7 +25,6 @@ public class About {
     private String avatarUrl;
     private String cvUrl;
 
-    // İletişim ve Sosyal Bilgiler
     private String email;
     private String phone;
     private String location;

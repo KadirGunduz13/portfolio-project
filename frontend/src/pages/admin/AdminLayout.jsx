@@ -10,8 +10,7 @@ export default function AdminLayout() {
         navigate('/admin/login');
     };
 
-    // Sol menüde görünecek bağlantılar ve ikonlar
-    // Sol menüde görünecek bağlantılar ve ikonlar
+
     const menuItems = [
         { path: '/admin/about', name: 'Hakkımda', icon: 'person' },
         { path: '/admin/projects', name: 'Projeler', icon: 'terminal' },

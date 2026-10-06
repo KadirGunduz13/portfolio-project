@@ -20,11 +20,11 @@ public class Experience {
     private String company;
 
     @Column(nullable = false)
-    private String role; // Pozisyon
+    private String role;
 
     private String location;
-    private String startDate; // Örn: "Haziran 2026"
-    private String endDate;   // Örn: "Ağustos 2026" veya "Devam Ediyor"
+    private String startDate;
+    private String endDate;
 
     @Column(columnDefinition = "TEXT")
     private String description;

@@ -19,10 +19,10 @@ public class Language {
     private Long id;
 
     @Column(nullable = false)
-    private String name; // Örn: Türkçe, İngilizce
+    private String name;
 
     @Column(nullable = false)
-    private String level; // Örn: Anadil, B2, C1
+    private String level;
 
     @Column(name = "sort_order")
     private Integer sortOrder = 0;

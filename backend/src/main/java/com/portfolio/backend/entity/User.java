@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users") // PostgreSQL'de "user" saklı bir kelime olduğu için "users" kullanıyoruz
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,5 +23,5 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role; // Örn: "ROLE_ADMIN"
+    private String role;
 }

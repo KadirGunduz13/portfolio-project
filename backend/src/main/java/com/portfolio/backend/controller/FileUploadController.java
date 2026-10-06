@@ -15,7 +15,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FileUploadController {
 
-    // Doğrudan somut sınıfa değil, Strateji arayüzüne bağımlıyız (Dependency Inversion)
     private final FileStorageStrategy fileStorageStrategy;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

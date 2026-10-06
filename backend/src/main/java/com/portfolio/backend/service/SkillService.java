@@ -21,7 +21,7 @@ public class SkillService {
     public Skill addSkill(SkillRequest request) {
         Skill skill = Skill.builder()
                 .name(request.getName())
-                .level(request.getLevel()) // BURASI DEĞİŞTİ
+                .level(request.getLevel())
                 .build();
         return repository.save(skill);
     }

@@ -19,13 +19,11 @@ public class ContactMessageService {
 
     public void processMessage(ContactMessageRequest request, String ipAddress) {
 
-        // 1. 24 SAAT KURALI KONTROLÜ
         LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
         if (repository.existsByIpAddressAndCreatedAtAfter(ipAddress, twentyFourHoursAgo)) {
             throw new RuntimeException("RATE_LIMIT_EXCEEDED"); // Custom Exception fırlatıyoruz
         }
 
-        // 2. VERİTABANINA KAYDET
         ContactMessage contactMessage = ContactMessage.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -34,13 +32,12 @@ public class ContactMessageService {
                 .build();
         repository.save(contactMessage);
 
-        // 3. E-POSTA GÖNDER (Kendi e-postana bildirim at)
         sendEmailNotification(contactMessage);
     }
 
     private void sendEmailNotification(ContactMessage message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo("kdrgndz203@gmail.com"); // E-postanın kime gideceği
+        mailMessage.setTo("kdrgndz203@gmail.com");
         mailMessage.setSubject("Portfolyodan Yeni Mesaj: " + message.getName());
         mailMessage.setText(
                 "Gönderen: " + message.getName() + "\n" +

@@ -9,6 +9,5 @@ import java.time.LocalDateTime;
 @Repository
 public interface ContactMessageRepository extends JpaRepository<ContactMessage, Long> {
 
-    // IP adresine ve belirli bir tarihten sonrasına göre mesaj kontrolü yapar
     boolean existsByIpAddressAndCreatedAtAfter(String ipAddress, LocalDateTime date);
 }

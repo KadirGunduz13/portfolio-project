@@ -17,12 +17,12 @@ public class Education {
     private Long id;
 
     @Column(nullable = false)
-    private String institution; // Okul Adı
+    private String institution;
 
     @Column(nullable = false)
-    private String degree;      // Örn: Lisans
+    private String degree;
 
-    private String fieldOfStudy; // Bölüm
+    private String fieldOfStudy;
     private String startDate;
     private String endDate;
     private String gpa;

@@ -20,16 +20,15 @@ public class Certificate {
     private String title;
 
     @Column(nullable = false)
-    private String issuer; // Veren Kurum
+    private String issuer;
 
     private String issueDate;
 
-    // Karakter sınırını kaldırdığımız alanlar:
     @Column(columnDefinition = "TEXT")
     private String credentialUrl;
 
     @Column(columnDefinition = "TEXT")
-    private String imageUrl; // Cloudinary'ye yüklenecek sertifika görseli
+    private String imageUrl;
 
     @Column(name = "sort_order")
     private Integer sortOrder = 0;

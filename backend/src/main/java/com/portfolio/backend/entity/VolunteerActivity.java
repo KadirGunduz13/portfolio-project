@@ -17,10 +17,10 @@ public class VolunteerActivity {
     private Long id;
 
     @Column(nullable = false)
-    private String organization; // Kurum/Topluluk Adı
+    private String organization;
 
     @Column(nullable = false)
-    private String role; // Görev
+    private String role;
 
     private String startDate;
     private String endDate;

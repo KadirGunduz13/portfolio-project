@@ -20,7 +20,6 @@ public class ContactController {
     @PostMapping
     public ResponseEntity<?> sendMessage(@Valid @RequestBody ContactMessageRequest request, HttpServletRequest httpRequest) {
         try {
-            // Kullanıcının IP adresini tespit etme (Gerekirse X-Forwarded-For kontrolü yapılabilir)
             String clientIp = httpRequest.getRemoteAddr();
 
             contactMessageService.processMessage(request, clientIp);
@@ -29,7 +28,6 @@ public class ContactController {
 
         } catch (RuntimeException e) {
             if (e.getMessage().equals("RATE_LIMIT_EXCEEDED")) {
-                // Özel 429 Too Many Requests (Çok fazla istek) hatası döndürürüz
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("LIMIT");
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sunucu hatası.");

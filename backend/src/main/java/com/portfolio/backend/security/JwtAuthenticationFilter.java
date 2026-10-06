@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // EKLENECEK KOD: Giriş (login) isteklerinde token arama, doğrudan geçişe izin ver
         if (request.getServletPath().contains("/api/auth")) {
             filterChain.doFilter(request, response);
             return;
