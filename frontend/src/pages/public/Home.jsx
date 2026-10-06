@@ -72,8 +72,7 @@ export default function Home() {
     useEffect(() => {
         const fetchPortfolioData = async () => {
             try {
-                // API İSTEKLERİNE SKILLS VE LANGUAGES EKLENDİ
-                const [aboutRes, projRes, expRes, eduRes, certRes, skillsRes, langRes] = await Promise.all([
+                const [aboutRes, projRes, expRes, eduRes, certRes, skillsRes, langRes, volunteerRes] = await Promise.all([
                     axiosClient.get('/about'),
                     axiosClient.get('/projects'),
                     axiosClient.get('/experiences'),
