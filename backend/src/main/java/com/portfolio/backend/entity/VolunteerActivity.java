@@ -27,4 +27,7 @@ public class VolunteerActivity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "sort_order")
+    private Integer sortOrder;
 }

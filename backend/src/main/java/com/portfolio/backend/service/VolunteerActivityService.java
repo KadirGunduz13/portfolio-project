@@ -2,6 +2,7 @@ package com.portfolio.backend.service;
 
 import com.portfolio.backend.entity.VolunteerActivity;
 import com.portfolio.backend.repository.VolunteerActivityRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,12 @@ public class VolunteerActivityService {
     private final VolunteerActivityRepository volunteerActivityRepository;
 
     public List<VolunteerActivity> getAllActivities() {
-        return volunteerActivityRepository.findAll();
+        return volunteerActivityRepository.findAllByOrderBySortOrderAsc();
     }
 
     public VolunteerActivity createActivity(VolunteerActivity activity) {
+        long count = volunteerActivityRepository.count();
+        activity.setSortOrder((int) count);
         return volunteerActivityRepository.save(activity);
     }
 
@@ -34,5 +37,17 @@ public class VolunteerActivityService {
 
     public void deleteActivity(Long id) {
         volunteerActivityRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateOrder(List<Long> activityIds) {
+        for (int i = 0; i < activityIds.size(); i++) {
+            Long id = activityIds.get(i);
+            VolunteerActivity activity = volunteerActivityRepository.findById(id).orElse(null);
+            if (activity != null) {
+                activity.setSortOrder(i);
+                volunteerActivityRepository.save(activity);
+            }
+        }
     }
 }

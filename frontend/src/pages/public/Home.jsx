@@ -105,7 +105,7 @@ export default function Home() {
     // Scroll-Spy: Yeni bölümler listeye eklendi
     useEffect(() => {
         const handleScroll = () => {
-            const sections = ['about', 'projects', 'experience', 'skills', 'education', 'certifications', 'languages', 'contact'];
+            const sections = ['about', 'projects', 'experience', 'volunteer', 'skills', 'education', 'certifications', 'languages', 'contact'];
             let current = 'about';
 
             for (const section of sections) {

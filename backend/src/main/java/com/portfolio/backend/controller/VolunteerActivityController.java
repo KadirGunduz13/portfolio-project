@@ -35,4 +35,10 @@ public class VolunteerActivityController {
         volunteerActivityService.deleteActivity(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/update-order")
+    public ResponseEntity<Void> updateOrder(@RequestBody List<Long> activityIds) {
+        volunteerActivityService.updateOrder(activityIds);
+        return ResponseEntity.ok().build();
+    }
 }

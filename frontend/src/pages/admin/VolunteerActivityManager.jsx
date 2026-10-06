@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import axiosClient from '../../api/axiosClient';
 
 export default function VolunteerActivityManager() {
@@ -80,6 +81,30 @@ export default function VolunteerActivityManager() {
     const cancelEdit = () => {
         setEditingId(null);
         reset();
+    };
+
+    // SÜRÜKLE BIRAK (DRAG & DROP) İŞLEMİNİ YAKALAYAN FONKSİYON
+    const handleDragEnd = async (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(activities);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        // Ekranı anında güncelle (Optimistic UI Update)
+        setActivities(items);
+
+        try {
+            // Sadece sıralanmış ID'leri backend'e gönder
+            const orderedIds = items.map(item => item.id);
+            await axiosClient.put('/volunteer-activities/update-order', orderedIds);
+        } catch (error) {
+            console.error("Sıralama güncellenirken hata oluştu:", error);
+            // Hata olursa ekranı eski haline döndür
+            fetchActivities();
+            setStatusMsg({ type: 'error', text: 'Sıralama kaydedilemedi.' });
+            setTimeout(() => setStatusMsg({ type: '', text: '' }), 3000);
+        }
     };
 
     return (
@@ -171,7 +196,7 @@ export default function VolunteerActivityManager() {
                         </div>
                     </form>
 
-                    {/* LİSTELEME ALANI */}
+                    {/* SÜRÜKLE BIRAK DESTEKLİ LİSTELEME ALANI */}
                     <div className="lg:col-span-5 flex flex-col gap-space-md sticky top-24">
                         <div className="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20">
                             <div className="flex items-center justify-between mb-3">
@@ -182,24 +207,53 @@ export default function VolunteerActivityManager() {
                             {activities.length === 0 ? (
                                 <span className="text-sm text-outline">Henüz faaliyet eklenmedi.</span>
                             ) : (
-                                <div className="flex flex-col gap-2 max-h-[450px] overflow-y-auto pr-1">
-                                    {activities.map((activity) => (
-                                        <div key={activity.id} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${editingId === activity.id ? 'bg-secondary-container/10 border-secondary/30' : 'bg-surface-container border-outline-variant/10 hover:border-outline-variant/30'}`}>
-                                            <div className="flex flex-col truncate pr-2">
-                                                <span className="font-label-sm text-on-surface font-semibold truncate">{activity.organization}</span>
-                                                <span className="text-xs text-outline truncate">{activity.role}</span>
+                                <DragDropContext onDragEnd={handleDragEnd}>
+                                    <Droppable droppableId="volunteer-activities">
+                                        {(provided) => (
+                                            <div
+                                                {...provided.droppableProps}
+                                                ref={provided.innerRef}
+                                                className="flex flex-col gap-2 max-h-[450px] overflow-y-auto pr-1"
+                                            >
+                                                {activities.map((activity, index) => (
+                                                    <Draggable key={String(activity.id)} draggableId={String(activity.id)} index={index}>
+                                                        {(provided, snapshot) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                                                    snapshot.isDragging ? 'bg-surface-container-highest border-primary/50 shadow-lg scale-[1.02]' :
+                                                                        editingId === activity.id ? 'bg-secondary-container/10 border-secondary/30' :
+                                                                            'bg-surface-container border-outline-variant/10 hover:border-outline-variant/30'
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-center gap-3 overflow-hidden">
+                                                                    {/* Sürükleme İkonu */}
+                                                                    <div {...provided.dragHandleProps} className="text-outline-variant hover:text-on-surface cursor-grab active:cursor-grabbing">
+                                                                        <span className="material-symbols-outlined text-lg">drag_indicator</span>
+                                                                    </div>
+                                                                    <div className="flex flex-col truncate pr-2">
+                                                                        <span className="font-label-sm text-on-surface font-semibold truncate">{activity.organization}</span>
+                                                                        <span className="text-xs text-outline truncate">{activity.role}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex gap-2 flex-shrink-0">
+                                                                    <button onClick={() => handleEdit(activity)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-secondary transition-colors cursor-pointer">
+                                                                        edit
+                                                                    </button>
+                                                                    <button onClick={() => handleDelete(activity.id)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-error transition-colors cursor-pointer">
+                                                                        delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                ))}
+                                                {provided.placeholder}
                                             </div>
-                                            <div className="flex gap-2 flex-shrink-0">
-                                                <button onClick={() => handleEdit(activity)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-secondary transition-colors cursor-pointer">
-                                                    edit
-                                                </button>
-                                                <button onClick={() => handleDelete(activity.id)} type="button" className="material-symbols-outlined text-sm text-outline hover:text-error transition-colors cursor-pointer">
-                                                    delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        )}
+                                    </Droppable>
+                                </DragDropContext>
                             )}
                         </div>
                     </div>
