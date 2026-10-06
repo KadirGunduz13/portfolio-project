@@ -9,6 +9,14 @@ export default function Home() {
     const [certificates, setCertificates] = useState([]);
     const [volunteerActivities, setVolunteerActivities] = useState([]);
 
+    const [galleryImages, setGalleryImages] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const openGallery = (images) => {
+        setGalleryImages(images);
+        setCurrentImageIndex(0);
+    };
+
     // YENİ STATE'LER (Yetenekler ve Diller için)
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
@@ -443,37 +451,62 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- 4. GÖNÜLLÜLÜK BÖLÜMÜ --- */}
+            {/* --- GÖNÜLLÜLÜK BÖLÜMÜ --- */}
             <section id="volunteer" className="relative z-10 w-full py-16 sm:py-20 border-t border-outline-variant/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="flex items-center gap-3 mb-8 sm:mb-10">
+                    <div className="flex items-center gap-3 mb-8 sm:mb-12">
                         <span className="material-symbols-outlined text-2xl sm:text-3xl text-secondary">volunteer_activism</span>
                         <h2 className="font-headline-md text-2xl sm:text-3xl font-bold">Gönüllülük Faaliyetleri</h2>
                     </div>
-                    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl">
+
+                    <div className="flex flex-col gap-6 max-w-5xl">
                         {volunteerActivities.length === 0 ? (
                             <p className="text-outline-variant">Henüz gönüllülük faaliyeti eklenmedi.</p>
                         ) : (
                             volunteerActivities.map((activity) => (
-                                <div key={activity.id} className="relative pl-6 sm:pl-8 md:pl-0">
-                                    <div className="md:hidden absolute left-0 top-0 bottom-0 w-px bg-outline-variant/20"></div>
-                                    <div className="md:hidden absolute left-[-4px] top-6 w-2 h-2 rounded-full bg-secondary"></div>
-                                    <div className="flex flex-col md:flex-row md:items-start gap-2 sm:gap-4 md:gap-12 p-4 sm:p-6 rounded-2xl bg-surface-container/50 border border-outline-variant/10 hover:bg-surface-container transition-colors">
-                                        <div className="md:w-56 flex-shrink-0 pt-1 mb-2 md:mb-0">
-                                <span className="inline-block px-3 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-tech text-[10px] sm:text-xs tracking-wider">
-                                    {activity.startDate} - {activity.endDate || 'Devam Ediyor'}
-                                </span>
-                                        </div>
-                                        <div className="flex flex-col flex-1">
-                                            <h3 className="font-headline-sm text-lg sm:text-xl font-semibold text-on-surface">{activity.role}</h3>
-                                            <span className="font-label-md text-secondary mb-2 sm:mb-3 text-sm sm:text-base">{activity.organization}</span>
-                                            {activity.description && (
-                                                <p className="text-on-surface-variant text-xs sm:text-sm leading-relaxed">
-                                                    {activity.description}
-                                                </p>
+                                <div key={activity.id} className="flex flex-col md:flex-row gap-6 p-6 rounded-2xl bg-surface-container/40 border border-outline-variant/10 hover:bg-surface-container/60 hover:border-outline-variant/30 transition-all">
+
+                                    {/* SOL: Tarih (Senin tasarımındaki gibi dikey) */}
+                                    <div className="flex flex-col items-center justify-center flex-shrink-0 w-full md:w-36 h-min py-3 px-2 bg-secondary-container/10 rounded-xl text-secondary font-code-inline text-xs sm:text-sm text-center">
+                                        <span>{activity.startDate}</span>
+                                        <span className="my-1 text-outline-variant/50">-</span>
+                                        <span>{activity.endDate || 'Devam Ediyor'}</span>
+                                    </div>
+
+                                    {/* ORTA: İçerik */}
+                                    <div className="flex flex-col flex-1 justify-center">
+                                        <h3 className="font-headline-sm text-lg sm:text-xl font-bold text-on-surface mb-1">{activity.role}</h3>
+                                        <span className="font-label-md text-secondary mb-3">{activity.organization}</span>
+                                        {activity.description && (
+                                            <p className="text-on-surface-variant text-sm leading-relaxed">
+                                                {activity.description}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* SAĞ: Görsel Kutusu (Eğer görsel eklendiyse görünür) */}
+                                    {activity.images && activity.images.length > 0 && (
+                                        <div
+                                            onClick={() => openGallery(activity.images)}
+                                            className="w-full md:w-48 h-48 flex-shrink-0 rounded-xl overflow-hidden cursor-pointer border border-outline-variant/20 hover:border-secondary/50 transition-all relative group"
+                                        >
+                                            <img src={activity.images[0]} alt={activity.role} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+
+                                            {/* Resimlerin üzerine gelen karanlık katman ve ikon */}
+                                            <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all text-3xl drop-shadow-md">
+                                        zoom_in
+                                    </span>
+                                            </div>
+
+                                            {/* Birden fazla görsel varsa "+X Görsel" etiketi */}
+                                            {activity.images.length > 1 && (
+                                                <div className="absolute bottom-2 right-2 bg-background/80 backdrop-blur-md px-2 py-1 rounded-md text-xs font-label-tech text-on-surface">
+                                                    +{activity.images.length - 1} Görsel
+                                                </div>
                                             )}
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             ))
                         )}
@@ -747,6 +780,54 @@ export default function Home() {
                         <button className="absolute -top-10 sm:-top-6 right-0 sm:-right-6 w-8 h-8 sm:w-10 sm:h-10 bg-surface-container-high border border-outline-variant/20 rounded-full flex items-center justify-center text-on-surface hover:bg-error hover:text-white transition-all shadow-lg z-10" onClick={(e) => { e.stopPropagation(); setSelectedCertImage(null); }} title="Kapat">
                             <span className="material-symbols-outlined text-sm sm:text-base">close</span>
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* --- RESİM GALERİSİ MODALI --- */}
+            {galleryImages && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/90 backdrop-blur-sm p-4">
+
+                    {/* Kapat Butonu */}
+                    <button onClick={() => setGalleryImages(null)} className="absolute top-6 right-6 p-2 bg-surface-container rounded-full text-on-surface hover:text-error transition-colors z-10">
+                        <span className="material-symbols-outlined text-2xl">close</span>
+                    </button>
+
+                    <div className="relative w-full max-w-4xl max-h-[85vh] flex items-center justify-center">
+
+                        {/* Önceki Resim Butonu */}
+                        {galleryImages.length > 1 && (
+                            <button
+                                onClick={() => setCurrentImageIndex(prev => prev === 0 ? galleryImages.length - 1 : prev - 1)}
+                                className="absolute left-2 md:-left-12 p-2 bg-surface-container/50 hover:bg-secondary hover:text-on-secondary rounded-full transition-colors backdrop-blur-md"
+                            >
+                                <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                            </button>
+                        )}
+
+                        {/* Ana Resim */}
+                        <img
+                            src={galleryImages[currentImageIndex]}
+                            alt="Galeri"
+                            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                        />
+
+                        {/* Sonraki Resim Butonu */}
+                        {galleryImages.length > 1 && (
+                            <button
+                                onClick={() => setCurrentImageIndex(prev => prev === galleryImages.length - 1 ? 0 : prev + 1)}
+                                className="absolute right-2 md:-right-12 p-2 bg-surface-container/50 hover:bg-secondary hover:text-on-secondary rounded-full transition-colors backdrop-blur-md"
+                            >
+                                <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                            </button>
+                        )}
+
+                        {/* Resim Sayacı */}
+                        {galleryImages.length > 1 && (
+                            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 font-label-tech text-sm text-outline">
+                                {currentImageIndex + 1} / {galleryImages.length}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

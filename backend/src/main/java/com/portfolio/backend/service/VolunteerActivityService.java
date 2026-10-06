@@ -32,6 +32,7 @@ public class VolunteerActivityService {
         activity.setStartDate(details.getStartDate());
         activity.setEndDate(details.getEndDate());
         activity.setDescription(details.getDescription());
+        activity.setImages(details.getImages());
         return volunteerActivityRepository.save(activity);
     }
 

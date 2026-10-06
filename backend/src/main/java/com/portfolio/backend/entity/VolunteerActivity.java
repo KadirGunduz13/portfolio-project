@@ -3,6 +3,8 @@ package com.portfolio.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "volunteer_activities")
 @Getter
@@ -30,4 +32,9 @@ public class VolunteerActivity {
 
     @Column(name = "sort_order")
     private Integer sortOrder;
+
+    @ElementCollection
+    @CollectionTable(name = "volunteer_images", joinColumns = @JoinColumn(name = "activity_id"))
+    @Column(name = "image_base64", columnDefinition = "TEXT")
+    private List<String> images;
 }
