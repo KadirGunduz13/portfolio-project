@@ -389,6 +389,11 @@ export default function Home() {
                                                     <span className="material-symbols-outlined text-sm">code</span> Kaynak Kod
                                                 </a>
                                             )}
+                                            {project.liveUrl && (
+                                                <a href={project.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-xs font-label-tech text-outline hover:text-secondary transition-colors">
+                                                    <span className="material-symbols-outlined text-sm">open_in_new</span> Canlı Site
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
