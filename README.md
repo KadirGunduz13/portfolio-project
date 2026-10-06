@@ -38,19 +38,16 @@ Masaüstü ve mobil cihazlarda kusursuz çalışan modern bir arayüze, yüksek 
 
 ### 💻 Ziyaretçi Arayüzü (Ana Sayfa)
 > *Hareketli terminal efekti, projeler, deneyimler ve yeteneklerin listelendiği modern ziyaretçi ekranı.*
-![Ana Sayfa Ekran Görüntüsü]
 > <img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/fa2f8ed3-6ba6-4de3-85ac-cfd87574f7c2" />
 
 
 ### ⚙️ Yönetim Paneli (Admin Dashboard)
-> *Sürükle-bırak özelliği ile içeriklerin yönetildiği, güvenli ve kullanıcı dostu admin paneli.*
-![Admin Panel Ekran Görüntüsü]
+> *İçeriklerin yönetildiği, güvenli ve kullanıcı dostu admin paneli.*
 > <img width="1917" height="902" alt="image" src="https://github.com/user-attachments/assets/fb88fd44-9a40-427d-b296-1643edda2b78" />
 
 
 ### 📱 Mobil Görünüm
 > *Responsive tasarım ve özel mobil Hamburger menü görünümü.*
-![Mobil Ekran Görüntüsü]
 > <img width="446" height="792" alt="image" src="https://github.com/user-attachments/assets/eb1f42a1-7ca8-4a4a-a44d-4af511b079ed" />
 
 
