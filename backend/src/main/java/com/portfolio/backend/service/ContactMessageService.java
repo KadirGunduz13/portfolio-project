@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture; // YENİ EKLENDİ
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class ContactMessageService {
 
         LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
         if (repository.existsByIpAddressAndCreatedAtAfter(ipAddress, twentyFourHoursAgo)) {
-            throw new RuntimeException("RATE_LIMIT_EXCEEDED"); // Custom Exception fırlatıyoruz
+            throw new RuntimeException("RATE_LIMIT_EXCEEDED");
         }
 
         ContactMessage contactMessage = ContactMessage.builder()
@@ -32,7 +33,15 @@ public class ContactMessageService {
                 .build();
         repository.save(contactMessage);
 
-        sendEmailNotification(contactMessage);
+        // KULLANICIYI BEKLETMEMEK İÇİN E-POSTA İŞLEMİNİ ARKA PLANA ATIYORUZ
+        CompletableFuture.runAsync(() -> {
+            try {
+                sendEmailNotification(contactMessage);
+            } catch (Exception e) {
+                // E-posta gönderilemese bile veritabanına kaydedildiği için kullanıcı hata görmez
+                System.err.println("Arka planda e-posta gönderilirken hata oluştu: " + e.getMessage());
+            }
+        });
     }
 
     private void sendEmailNotification(ContactMessage message) {
