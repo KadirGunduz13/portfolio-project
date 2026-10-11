@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
+import emailjs from '@emailjs/browser'; // EN ÜSTE EKLENECEK
 
 export default function Home() {
     const [about, setAbout] = useState(null);
@@ -138,34 +139,36 @@ export default function Home() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [loading]);
 
+    // İletişim formunu gönderen fonksiyonun yeni hali:
     const handleContactSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
-            await axiosClient.post('/contact', contactForm);
-            setModalConfig({
-                isOpen: true,
-                type: 'success',
-                title: 'Mesajınız İletildi!',
-                message: 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağım.'
-            });
-            setContactForm({ name: '', email: '', message: '' });
+            // 1. Önce Backend'e istek at (Veritabanı kaydı ve 24 saatlik IP kontrolü için)
+            const res = await axiosClient.post('/contact', contactForm);
+
+            // 2. Eğer backend izin verirse (Durum 201 Created ise), e-postayı EmailJS ile gönder!
+            if (res.status === 201) {
+                await emailjs.send(
+                    'service_0cb8kg7',   // Örn: 'service_abc123'
+                    'template_tqrt6me',  // Örn: 'template_xyz987'
+                    {
+                        from_name: contactForm.name,
+                        from_email: contactForm.email,
+                        message: contactForm.message,
+                    },
+                    'hbYHFQOc35_XFwUy8'    // Örn: 'aBcDeFgHiJkLmNoP'
+                );
+
+                alert("Mesajınız başarıyla gönderildi!");
+                setContactForm({ name: '', email: '', message: '' }); // Formu temizle
+            }
         } catch (error) {
             if (error.response && error.response.status === 429) {
-                setModalConfig({
-                    isOpen: true,
-                    type: 'error',
-                    title: 'Gönderim Sınırı Aşıldı',
-                    message: 'Spam koruması nedeniyle 24 saat içinde sadece 1 mesaj gönderebilirsiniz. Lütfen daha sonra tekrar deneyin.'
-                });
+                alert("Gönderim Sınırı Aşıldı: 24 saat içinde sadece 1 mesaj gönderebilirsiniz.");
             } else {
-                setModalConfig({
-                    isOpen: true,
-                    type: 'error',
-                    title: 'Gönderim Başarısız',
-                    message: 'Mesajınız gönderilirken bir sunucu hatası oluştu. Lütfen doğrudan e-posta göndermeyi deneyin.'
-                });
+                alert("Sunucu hatası, lütfen daha sonra tekrar deneyin.");
             }
         } finally {
             setIsSubmitting(false);

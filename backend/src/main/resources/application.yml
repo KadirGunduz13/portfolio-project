@@ -7,6 +7,10 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    # EKLENECEK KISIM (HikariPool uyarılarını çözer)
+    hikari:
+      max-lifetime: 600000 # 10 dakika (Veritabanı kapatmadan biz bağlantıyı yenileriz)
+      idle-timeout: 300000 # 5 dakika boşta kalırsa kapat
   jpa:
     hibernate:
       ddl-auto: update
