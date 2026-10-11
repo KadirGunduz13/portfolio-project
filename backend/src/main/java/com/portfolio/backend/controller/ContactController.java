@@ -20,7 +20,8 @@ public class ContactController {
     @PostMapping
     public ResponseEntity<?> sendMessage(@Valid @RequestBody ContactMessageRequest request, HttpServletRequest httpRequest) {
         try {
-            String clientIp = httpRequest.getRemoteAddr();
+            // GERÇEK IP'Yİ BULAN YENİ YARDIMCI METODU ÇAĞIRIYORUZ
+            String clientIp = extractRealIp(httpRequest);
 
             contactMessageService.processMessage(request, clientIp);
 
@@ -32,5 +33,19 @@ public class ContactController {
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sunucu hatası.");
         }
+    }
+
+    // RENDER'IN TAMPON SUNUCUSUNU AŞIP GERÇEK KULLANICI IP'SİNİ YAKALAYAN METOT
+    private String extractRealIp(HttpServletRequest request) {
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+
+        // Eğer istek bir proxy (Render) üzerinden gelmişse, gerçek IP bu başlığın içindedir
+        if (forwardedFor != null && !forwardedFor.isEmpty()) {
+            // Birden fazla yönlendirme varsa ilk IP her zaman asıl kullanıcıdır
+            return forwardedFor.split(",")[0].trim();
+        }
+
+        // Eğer yerelde (localhost) çalışıyorsa standart metodu kullan
+        return request.getRemoteAddr();
     }
 }
