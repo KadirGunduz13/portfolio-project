@@ -141,6 +141,7 @@ export default function Home() {
 
     // İletişim formunu gönderen fonksiyonun yeni hali:
     // İletişim formunu gönderen fonksiyonun yeni hali (Özel Modal Entegrasyonu):
+    // İletişim formunu gönderen fonksiyonun yeni hali (Özel Modal Entegrasyonu):
     const handleContactSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
