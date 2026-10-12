@@ -9,5 +9,6 @@ import java.time.LocalDateTime;
 @Repository
 public interface ContactMessageRepository extends JpaRepository<ContactMessage, Long> {
 
-    boolean existsByIpAddressAndCreatedAtAfter(String ipAddress, LocalDateTime date);
+    // IP yerine kullanıcının formda girdiği e-posta adresine göre kontrol sağlayan metot
+    boolean existsByEmailAndCreatedAtAfter(String email, LocalDateTime date);
 }

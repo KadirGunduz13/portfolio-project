@@ -15,9 +15,12 @@ public class ContactMessageService {
     private final ContactMessageRepository repository;
 
     public void processMessage(ContactMessageRequest request, String ipAddress) {
-        // 24 saatlik IP (Spam) kontrolü
+
+        // 24 saatlik E-Posta (Spam) kontrolü
         LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
-        if (repository.existsByIpAddressAndCreatedAtAfter(ipAddress, twentyFourHoursAgo)) {
+
+        // IP adresi yerine kullanıcının formda girdiği e-posta adresini kontrol ediyoruz
+        if (repository.existsByEmailAndCreatedAtAfter(request.getEmail(), twentyFourHoursAgo)) {
             throw new RuntimeException("RATE_LIMIT_EXCEEDED");
         }
 
@@ -26,7 +29,7 @@ public class ContactMessageService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .message(request.getMessage())
-                .ipAddress(ipAddress)
+                .ipAddress(ipAddress) // IP'yi log olarak tutuyoruz ama limite etki etmiyor
                 .build();
 
         repository.save(contactMessage);
