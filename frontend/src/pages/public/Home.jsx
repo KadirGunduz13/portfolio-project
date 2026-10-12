@@ -140,35 +140,54 @@ export default function Home() {
     }, [loading]);
 
     // İletişim formunu gönderen fonksiyonun yeni hali:
+    // İletişim formunu gönderen fonksiyonun yeni hali (Özel Modal Entegrasyonu):
     const handleContactSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
-            // 1. Önce Backend'e istek at (Veritabanı kaydı ve 24 saatlik IP kontrolü için)
+            // 1. Önce Backend'e istek at (Veritabanı kaydı ve IP/Email kontrolü için)
             const res = await axiosClient.post('/contact', contactForm);
 
-            // 2. Eğer backend izin verirse (Durum 201 Created ise), e-postayı EmailJS ile gönder!
+            // 2. Eğer backend izin verirse, e-postayı EmailJS ile gönder!
             if (res.status === 201) {
                 await emailjs.send(
-                    'service_0cb8kg7',   // Örn: 'service_abc123'
-                    'template_tqrt6me',  // Örn: 'template_xyz987'
+                    'service_0cb8kg7',
+                    'template_tqrt6me',
                     {
                         from_name: contactForm.name,
                         from_email: contactForm.email,
                         message: contactForm.message,
                     },
-                    'hbYHFQOc35_XFwUy8'    // Örn: 'aBcDeFgHiJkLmNoP'
+                    'hbYHFQOc35_XFwUy8'
                 );
 
-                alert("Mesajınız başarıyla gönderildi!");
+                // TARAYICI UYARISI YERİNE ÖZEL MODAL KULLANILIYOR
+                setModalConfig({
+                    isOpen: true,
+                    type: 'success',
+                    title: 'Başarılı!',
+                    message: 'Mesajınız başarıyla gönderildi.'
+                });
                 setContactForm({ name: '', email: '', message: '' }); // Formu temizle
             }
         } catch (error) {
             if (error.response && error.response.status === 429) {
-                alert("Gönderim Sınırı Aşıldı: 24 saat içinde sadece 1 mesaj gönderebilirsiniz.");
+                // TARAYICI UYARISI YERİNE ÖZEL MODAL KULLANILIYOR
+                setModalConfig({
+                    isOpen: true,
+                    type: 'error',
+                    title: 'Gönderim Sınırı Aşıldı',
+                    message: 'Spam koruması nedeniyle 24 saat içinde sadece 1 mesaj gönderebilirsiniz.'
+                });
             } else {
-                alert("Sunucu hatası, lütfen daha sonra tekrar deneyin.");
+                // TARAYICI UYARISI YERİNE ÖZEL MODAL KULLANILIYOR
+                setModalConfig({
+                    isOpen: true,
+                    type: 'error',
+                    title: 'Sunucu Hatası',
+                    message: 'İşleminiz şu anda gerçekleştirilemiyor, lütfen daha sonra tekrar deneyin.'
+                });
             }
         } finally {
             setIsSubmitting(false);
@@ -261,8 +280,7 @@ export default function Home() {
                         <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className={`p-3 text-center ${getNavLinkClass('about')}`}>Hakkımda</a>
                         <a href="#projects" onClick={(e) => scrollToSection(e, 'projects')} className={`p-3 text-center ${getNavLinkClass('projects')}`}>Projeler</a>
                         <a href="#experience" onClick={(e) => scrollToSection(e, 'experience')} className={`p-3 text-center ${getNavLinkClass('experience')}`}>Deneyim</a>
-                        <a href="#volunteer" onClick={(e) => scrollToSection(e, 'volunteer')} className={getNavLinkClass('volunteer')}>Gönüllülük</a>
-                        <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={`p-3 text-center ${getNavLinkClass('skills')}`}>Yetenekler</a>
+                        <a href="#volunteer" onClick={(e) => scrollToSection(e, 'volunteer')} className={`p-3 text-center ${getNavLinkClass('volunteer')}`}>Gönüllülük</a>                        <a href="#skills" onClick={(e) => scrollToSection(e, 'skills')} className={`p-3 text-center ${getNavLinkClass('skills')}`}>Yetenekler</a>
                         <a href="#education" onClick={(e) => scrollToSection(e, 'education')} className={`p-3 text-center ${getNavLinkClass('education')}`}>Eğitim</a>
                         <a href="#certifications" onClick={(e) => scrollToSection(e, 'certifications')} className={`p-3 text-center ${getNavLinkClass('certifications')}`}>Sertifikalar</a>
                         <a href="#languages" onClick={(e) => scrollToSection(e, 'languages')} className={`p-3 text-center ${getNavLinkClass('languages')}`}>Diller</a>
