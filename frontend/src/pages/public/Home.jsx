@@ -491,8 +491,12 @@ export default function Home() {
                                     {/* SOL: Tarih (Senin tasarımındaki gibi dikey) */}
                                     <div className="flex flex-col items-center justify-center flex-shrink-0 w-full md:w-36 h-min py-3 px-2 bg-secondary-container/10 rounded-xl text-secondary font-code-inline text-xs sm:text-sm text-center">
                                         <span>{activity.startDate}</span>
-                                        <span className="my-1 text-outline-variant/50">-</span>
-                                        <span>{activity.endDate || 'Devam Ediyor'}</span>
+                                        {activity.endDate && (
+                                            <>
+                                                <span className="my-1 text-outline-variant/50">-</span>
+                                                <span>{activity.endDate}</span>
+                                            </>
+                                        )}
                                     </div>
 
                                     {/* ORTA: İçerik */}
